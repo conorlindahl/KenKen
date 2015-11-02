@@ -1,5 +1,7 @@
 package kenken;
 
+import input.Input;
+import input.InputFromFile;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,16 +11,18 @@ import java.util.Set;
 
 public class Main {
 
-	private static String fileName = "input.txt";
+	private static String fileName = "easySizeFive.txt";
 	
 	public static void main(String[] args) throws IOException, InvalidInitializationException {
-		Scanner sc = null;;
-		try {
-			sc = new Scanner(new File(fileName));
-		} catch (FileNotFoundException ex) {
-			throw new FileNotFoundException("Could not find the file "
-					+ fileName);
+
+		String kenkenString = null; 
+		while(kenkenString == null) {
+			Input i = new InputFromFile();
+			i.specifySource();
+			kenkenString = i.getKenKenString();
 		}
+		
+		Scanner sc = new Scanner(kenkenString);
 		
 		int kenkenSize = Integer.parseInt(sc.nextLine());
 		Grid kenken = new Grid(kenkenSize);
@@ -28,8 +32,6 @@ public class Main {
 			String cage = sc.nextLine();
 			kenken.addCage(cage);
 		}
-		
-		sc.close(); // Done with sc
 		
 		List<Grid.Cage> cages = kenken.getCages();
 		
