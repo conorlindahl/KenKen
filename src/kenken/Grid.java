@@ -19,7 +19,6 @@ public class Grid {
 		grid = new Square[size][size];
 		this.size = size;
 		cages = new ArrayList<Cage>();
-		init();
 	}
 	
 	public int size() {
@@ -53,6 +52,7 @@ public class Grid {
 				String[] point = pointString.split(",");
 				int x = Integer.parseInt(point[0]);
 				int y = Integer.parseInt(point[1]);
+				grid[x][y] = new Square();
 				cageSquares[i] = grid[x][y];
 			}
 		} catch(NoSuchElementException ex) {
@@ -77,14 +77,6 @@ public class Grid {
 	
 	public List<Cage> getCages() {
 		return Collections.unmodifiableList(cages);
-	}
-	
-	private void init() {
-		for(int x=0; x<size; x++) {
-			for(int y=0; y<size; y++) {
-				grid[x][y] = new Square();
-			}
-		}
 	}
 	
 	public boolean isInitialized() {
@@ -236,13 +228,14 @@ public class Grid {
 		return true; // True if we make it out
 	}
 	
-	public void print() {
+	public int[][] getRepresentation() {
+		int[][] rep = new int[size][size];
 		for(int i=0; i<size; i++) {
 			for(int n=0; n<size; n++) {
-				System.out.print(grid[i][n].value + " ");
+				rep[i][n] = grid[i][n].value;
 			}
-			System.out.println();
 		}
+		return rep;
 	}
 	
 	public class Square {
@@ -380,7 +373,7 @@ public class Grid {
 			this.values = squares;
 			this.total = total;
 			calcPossibilities();
-			validateOptions();
+//			validateOptions();
 		}
 		
 		protected void calcPossibilities() {
@@ -418,7 +411,7 @@ public class Grid {
 			this.values = squares;
 			this.total = total;
 			calcPossibilities();
-			validateOptions();
+//			validateOptions();
 		}
 		
 		protected void calcPossibilities() {
@@ -456,7 +449,7 @@ public class Grid {
 			this.values = squares;
 			this.total = total;
 			calcPossibilities();
-			validateOptions();
+//			validateOptions();
 		}
 		
 		protected void calcPossibilities() {
@@ -494,7 +487,7 @@ public class Grid {
 			this.values = squares;
 			this.total = total;
 			calcPossibilities();
-			validateOptions();
+//			validateOptions();
 		}
 		
 		protected void calcPossibilities() {
