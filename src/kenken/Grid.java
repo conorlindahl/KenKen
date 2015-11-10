@@ -1,13 +1,11 @@
 package kenken;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -191,27 +189,41 @@ public class Grid {
 		return true;
 	}
 	
+	/**
+	 * A valid row is a row that doesn't have any repeating numbers. That is,
+	 * The row [ 1, 2, 3, 4, 5 ] is valid,
+	 * as is the row [ 1, 0, 3, 4, 0 ],
+	 * as is the row [ 0, 0, 0, 0, 0 ].
+	 * 
+	 * @param int row
+	 */
 	private boolean isValidRow(int row) {
-		Square[] validate = grid[row];
-		boolean[] nums = new boolean[size]; // Represent used numbers
+		Square[] checkRow = grid[row];
+		boolean[] used = new boolean[size]; // Represent used numbers
 		
-		for(int i=0; i<nums.length; i++) { // None used yet
-			nums[i] = false;
+		for(int i=0; i<used.length; i++) { // None used yet
+			used[i] = false;
 		}
 		
-		for(int i=0; i<size; i++) {
-			int number = validate[i].value; // Number in square
-			if(number == 0) { // Square not used
+		int i=0;
+		boolean valid = true;
+		while(valid && i<size) {
+			int currentNum = checkRow[i].value;
+			if(currentNum == 0) {
+				// Unconcerned with squares whose value is zero
+				i+=1;
 				continue;
 			}
-			if(nums[number-1]) { // Number already exists in row
-				return false;
-			}
-			nums[number-1] = true; // Set number to used
+			
+			valid = used[currentNum-1] ? false : true;
+			used[currentNum-1] = true;
+			i+=1;
 		}
-		return true; // If we make it out, is successful
+		
+		return valid;
 	}
 	
+	//TODO: Update isValidCol to be similar to update for isValidRow
 	private boolean isValidCol(int col) {
 		boolean[] nums = new boolean[size]; // Represents used numbers
 		

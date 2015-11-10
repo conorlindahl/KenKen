@@ -13,9 +13,9 @@ import org.junit.Test;
 public class TestMakeCage {
 	
 	@Test
-	public void testAddMultiplyCage() {
+	public void testAddMultiplyCage() throws InvalidInitializationException {
 		Grid tester = new Grid(5);
-		tester.addCage("x 24 3 0,2 1,2 1,3");
+		tester.addCage("Multiply 24 3 0,2 1,2 1,3");
 		List<Grid.Cage> cage = tester.getCages();
 		
 		Grid.Cage testCage = cage.get(0);
@@ -28,9 +28,9 @@ public class TestMakeCage {
 	}
 	
 	@Test
-	public void testAddAddCage() {
+	public void testAddAddCage() throws InvalidInitializationException {
 		Grid tester = new Grid(5);
-		tester.addCage("+ 6 2 0,3 0,4");
+		tester.addCage("Add 6 2 0,3 0,4");
 		List<Grid.Cage> cage = tester.getCages();
 		
 		Grid.Cage testCage = cage.get(0);
@@ -43,9 +43,9 @@ public class TestMakeCage {
 	}
 	
 	@Test
-	public void testAddSubtractCage() {
+	public void testAddSubtractCage() throws InvalidInitializationException {
 		Grid tester = new Grid(5);
-		tester.addCage("- 3 2 1,4 2,4");
+		tester.addCage("Subtract 3 2 1,4 2,4");
 		List<Grid.Cage> cage = tester.getCages();
 		
 		Grid.Cage testCage = cage.get(0);
@@ -58,9 +58,9 @@ public class TestMakeCage {
 	}
 	
 	@Test
-	public void testAddDivideCage() {
+	public void testAddDivideCage() throws InvalidInitializationException {
 		Grid tester = new Grid(5);
-		tester.addCage("/ 2 2 2,3 3,3");
+		tester.addCage("Divide 2 2 2,3 3,3");
 		List<Grid.Cage> cage = tester.getCages();
 		
 		Grid.Cage testCage = cage.get(0);
@@ -73,9 +73,9 @@ public class TestMakeCage {
 	}
 	
 	@Test
-	public void testAddEqualCage() {
+	public void testAddEqualCage() throws InvalidInitializationException {
 		Grid tester = new Grid(5);
-		tester.addCage("= 4 1 2,3");
+		tester.addCage("Equal 4 1 2,3");
 		List<Grid.Cage> cage = tester.getCages();
 		
 		Grid.Cage testCage = cage.get(0);
@@ -87,8 +87,8 @@ public class TestMakeCage {
 		assertTrue(rightType && rightTotal && rightNumSquares);
 	}
 	
-	@Test
-	public void testAddInvalidCage() {
+	@Test(expected=InvalidInitializationException.class)
+	public void testAddInvalidCage() throws InvalidInitializationException {
 		Grid tester = new Grid(5);
 		tester.addCage("HAHACOOL 4 1 2,3");
 		List<Grid.Cage> cage = tester.getCages();
@@ -98,14 +98,14 @@ public class TestMakeCage {
 		assertTrue(noCages);
 	}
 	
-	@Test(expected = NoSuchElementException.class)
-	public void testAddMissingPoints() {
+	@Test(expected = InvalidInitializationException.class)
+	public void testAddMissingPoints() throws InvalidInitializationException {
 		Grid tester = new Grid(5);
-		tester.addCage("* 4 2 2,3");
+		tester.addCage("Multiply 4 2 2,3");
 	}
 	
 	@Test
-	public void loadEntireGrid() {
+	public void loadEntireGrid() throws InvalidInitializationException {
 		Scanner sc = null;
 		try {
 			sc = new Scanner(new File("testInput.txt"));
