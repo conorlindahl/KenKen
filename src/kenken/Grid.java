@@ -94,95 +94,71 @@ public class Grid {
 	}
 	
 	public boolean isFilled() {
-		boolean rowsValid = checkRows();
-		boolean colsValid = checkCols();
+		boolean rowsValid = isEachRowFilled();
+		boolean colsValid = isEachColFilled();
 		
 		return rowsValid && colsValid;
 	}
 	
-	private boolean checkRows() {
-		for(int i=0; i<size; i++) {
-			if (checkRow(i) == false) {
-				return false;
-			}
+	private boolean isEachRowFilled() {
+		int currentRow=0;
+		while(currentRow<size && isRowFilled(currentRow)) {
+			currentRow+=1;
 		}
-		return true;
+		return currentRow == size;
 	}
 	
-	private boolean checkCols() {
-		for(int i=0; i<size; i++) {
-			if (checkCol(i) == false ) {
-				return false;
-			}
+	private boolean isEachColFilled() {
+		int currentCol=0;
+		while(currentCol<size && isColFilled(currentCol)) {
+			currentCol+=1;
 		}
-		return true;
+		return currentCol == size;
 	}
 	
-	private boolean checkRow(int row) {
-		boolean[] nums = new boolean[size]; // Representing all needed numbers
-		
-		for(int i=0; i<nums.length; i++) { // Initialization
-			nums[i] = false;
-		}
-
-		for(int i=0; i<size; i++) { 
-			int val = grid[row][i].value;
-			if(val == 0) {
-				continue;
-			}
-			nums[val-1] = true; // If value is filled, set it's index to true
-		}
-		
-		for(boolean i : nums) { // If any aren't set, then not a valid row
-			if(!i) {
-				return false;
+	private boolean isRowFilled(int row) {
+		boolean isValid = true;
+		int i=0;
+		while(isValid && i<size) {
+			int currentNum = grid[row][i].value;
+			if(currentNum <= 0 || currentNum > size) {
+				isValid = false;
 			}
 		}
-		return true;
+		return isValid;
 	}
 	
-	private boolean checkCol(int col) {
-		boolean[] nums = new boolean[size]; // Representing all needed numbers
-		
-		for(int i=0; i<nums.length; i++) { // Initialization
-			nums[i] = false;
-		}
-
-		for(int i=0; i<size; i++) {
-			int val = grid[i][col].value;
-			if(val == 0) {
-				continue;
-			}
-			nums[val-1] = true; // If value is filled, set it's index to true
-		}
-		
-		for(boolean i : nums) { // If any aren't set, then not a valid row
-			if(!i) {
-				return false; 
+	private boolean isColFilled(int col) {
+		boolean isValid = true;
+		int i=0;
+		while(isValid && i<size) {
+			int currentNum = grid[i][col].value;
+			if(currentNum <= 0 || currentNum > size) {
+				isValid = false;
 			}
 		}
-		return true;
+		return isValid;
 	}
 	
 	public boolean isValid() {
-		boolean validRows = areRowsValid();
-		boolean validColumns = areColsValid();
+		boolean validRows = isEachRowValid();
+		boolean validColumns = isEachColValid();
 		
 		return validRows && validColumns;
 	}
 
-	private boolean areRowsValid() {
+	private boolean isEachRowValid() {
 		for(int i=0; i<size; i++) {
-			if(!isValidRow(i)) {
+			if(!isRowValid(i)) {
 				return false;
 			}
 		}
 		return true;
 	}
 	
-	private boolean areColsValid() {
+	private boolean isEachColValid() {
 		for(int i=0; i<size; i++) {
-			if(!isValidCol(i)) {
+			if(!isColValid(i)) {
 				return false;
 			}
 		}
@@ -197,8 +173,7 @@ public class Grid {
 	 * 
 	 * @param int row
 	 */
-	private boolean isValidRow(int row) {
-		Square[] checkRow = grid[row];
+	private boolean isRowValid(int row) {
 		boolean[] used = new boolean[size]; // Represent used numbers
 		
 		for(int i=0; i<used.length; i++) { // None used yet
@@ -208,7 +183,7 @@ public class Grid {
 		int i=0;
 		boolean valid = true;
 		while(valid && i<size) {
-			int currentNum = checkRow[i].value;
+			int currentNum = grid[row][i].value;
 			if(currentNum == 0) {
 				// Unconcerned with squares whose value is zero
 				i+=1;
@@ -223,25 +198,29 @@ public class Grid {
 		return valid;
 	}
 	
-	//TODO: Update isValidCol to be similar to update for isValidRow
-	private boolean isValidCol(int col) {
-		boolean[] nums = new boolean[size]; // Represents used numbers
+	private boolean isColValid(int col) {
+		boolean[] used = new boolean[size]; // Represents used numbers
 		
-		for(int i=0; i<nums.length; i++) { // None used yet
-			nums[i] = false;
+		for(int i=0; i<used.length; i++) { // None used yet
+			used[i] = false;
 		}
 		
-		for(int i=0; i<size; i++) {
-			int number = grid[i][col].value; // Get the value at that spot
-			if(number == 0) { // Square not used yet
+		int i=0;
+		boolean valid = true;
+		while(valid && i<size) {
+			int currentNum = grid[i][col].value;
+			if(currentNum == 0) {
+				// Unconcerned with squares whose value is zero
+				i+=1;
 				continue;
 			}
-			if( nums[number-1] ) { // See if number already used
-				return false;
-			}
-			nums[number-1] = true; // Set number to used
+			
+			valid = used[currentNum-1] ? false : true;
+			used[currentNum-1] = true;
+			i+=1;
 		}
-		return true; // True if we make it out
+		
+		return valid;
 	}
 	
 	public int[][] getRepresentation() {
