@@ -124,9 +124,18 @@ class TestGrid extends Grid {
 	
 	public TestGrid(int size) {
 		super(size);
+		testInit();
 	}
 	
 	public Square[][] getGrid() {
 		return grid;
+	}
+	
+	private void testInit() {
+		for(int x=0; x<size; x+=1){
+			for(int y=0; y<size; y+=1) {
+				grid[x][y] = new Square();
+			}
+		}
 	}
 }

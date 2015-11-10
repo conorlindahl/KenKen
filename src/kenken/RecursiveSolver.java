@@ -101,9 +101,3 @@ public class RecursiveSolver implements Solver {
 		return false;
 	}
 }
-
-class InvalidInitializationException extends Exception {
-	public InvalidInitializationException(String a) {
-		super(a);
-	}
-}

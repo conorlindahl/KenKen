@@ -1,5 +1,7 @@
 package kenken;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,19 +31,22 @@ public class Grid {
 	 * Constructs a Cage for the kenken grid based on the description
 	 * given in the String.<br>
 	 * The description is expected to be of the following form:
-	 * <idenifier> <total> <# of Squares> <space separated list of points><br>
-	 * <b>Identifiers</b><br>
-	 * = for Single square cages where the value for the square is given<br>
-	 * + for a cage who's total is made by addition<br>
-	 * - for a cage who's total is made by subtraction<br>
-	 * x for a cage who's total is made by multiplication<br>
-	 * / for a cage who's total is made by division<br>
+	 * <operation> <total> <# of Squares> <space separated list of points><br>
+	 * <br>
+	 * <b>Operations:</b><br>
+	 * <b><i>Subtract<br>
+	 * Add<br>
+	 * Multiply<br>
+	 * Divide<br>
+	 * Equal</b> (For when a Cage consists of one square)</i><br>
+	 * 
 	 * 
 	 * @param description
+	 * @throws NoSuchMethodException 
 	 */
-	public void addCage(String description) {
+	public void addCage(String description) throws InvalidInitializationException {
 		Scanner sc = new Scanner(description);
-		String type = sc.next();
+		String operation = sc.next();
 		int total = sc.nextInt();
 		int numSquares = sc.nextInt();
 		Square[] cageSquares = new Square[numSquares];
@@ -55,23 +60,22 @@ public class Grid {
 				grid[x][y] = new Square();
 				cageSquares[i] = grid[x][y];
 			}
-		} catch(NoSuchElementException ex) {
-			throw new NoSuchElementException("Not enough points for creation of"
-					+ " cage");
+		} catch(Exception ex) {
+			String message = "Error parsing line: " + description + "\n" +
+					"Did not construct cage.";
+			throw new InvalidInitializationException(message);
 		} finally {
 			sc.close(); // No longer need the scanner
 		}
 		
-		if("=".equals(type)) {
-			cages.add(new EqualCage(cageSquares, total));
-		} else if("+".equals(type)) {
-			cages.add(new AddCage(cageSquares, total));
-		} else if("-".equals(type)) {
-			cages.add(new SubtractCage(cageSquares, total));
-		} else if("x".equals(type)) {
-			cages.add(new MultiplyCage(cageSquares, total));
-		} else if("/".equals(type)) {
-			cages.add(new DivideCage(cageSquares, total));
+		try {
+			Class<?> cageType = Class.forName("kenken.Grid$" + operation + "Cage");
+			Constructor<?> cageConstructor = cageType.getConstructor(Grid.class, Square[].class, int.class);
+			Cage newCage = (Cage) cageConstructor.newInstance(Grid.this, cageSquares, total);
+			cages.add(newCage);
+		} catch (Exception ex) {
+			throw new InvalidInitializationException("Unable to construct " +
+					operation + "Cage");
 		}
 	}
 	
@@ -537,5 +541,11 @@ public class Grid {
 			options.add(new int[]{total});
 			this.options = options;
 		}
+	}
+}
+
+class InvalidInitializationException extends Exception {
+	public InvalidInitializationException(String a) {
+		super(a);
 	}
 }
