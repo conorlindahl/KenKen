@@ -93,6 +93,16 @@ public class Grid {
 		return isInitialized;
 	}
 	
+	public int[][] getRepresentation() {
+		int[][] rep = new int[size][size];
+		for(int i=0; i<size; i++) {
+			for(int n=0; n<size; n++) {
+				rep[i][n] = grid[i][n].value;
+			}
+		}
+		return rep;
+	}
+	
 	public boolean isFilled() {
 		boolean rowsValid = isEachRowFilled();
 		boolean colsValid = isEachColFilled();
@@ -124,6 +134,7 @@ public class Grid {
 			if(currentNum <= 0 || currentNum > size) {
 				isValid = false;
 			}
+			i+=1;
 		}
 		return isValid;
 	}
@@ -136,6 +147,7 @@ public class Grid {
 			if(currentNum <= 0 || currentNum > size) {
 				isValid = false;
 			}
+			i+=1;
 		}
 		return isValid;
 	}
@@ -172,6 +184,7 @@ public class Grid {
 	 * as is the row [ 0, 0, 0, 0, 0 ].
 	 * 
 	 * @param int row
+	 * @return true if row is valid
 	 */
 	private boolean isRowValid(int row) {
 		boolean[] used = new boolean[size]; // Represent used numbers
@@ -198,6 +211,12 @@ public class Grid {
 		return valid;
 	}
 	
+	/**
+	 * Works exactly like isRowValid, except it works on columns.
+	 * 
+	 * @param col
+	 * @return true if column is valid
+	 */
 	private boolean isColValid(int col) {
 		boolean[] used = new boolean[size]; // Represents used numbers
 		
@@ -221,16 +240,6 @@ public class Grid {
 		}
 		
 		return valid;
-	}
-	
-	public int[][] getRepresentation() {
-		int[][] rep = new int[size][size];
-		for(int i=0; i<size; i++) {
-			for(int n=0; n<size; n++) {
-				rep[i][n] = grid[i][n].value;
-			}
-		}
-		return rep;
 	}
 	
 	public class Square {

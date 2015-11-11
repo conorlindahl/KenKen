@@ -41,18 +41,11 @@ public class TestSumEquals {
 	@Test
 	public void testMultipleValueTrue() {
 		/* Add random values to list */
-		ArrayList x = new ArrayList();
 		java.util.Random r = new java.util.Random();
-		for (int i=0; i < 10; i++ ) {
-			int add = r.nextInt(100);
-			x.add(add);
-		}
-		
-		/* Set int[] and total for function */
-		int[] nums = new int[x.size()];
+		int[] nums = new int[10];
 		int total = 0;
-		for(int i=0; i<x.size(); i++) {
-			nums[i] = (int) x.get(i);
+		for (int i=0; i < 10; i++ ) {
+			nums[i] = r.nextInt(100);
 			total += nums[i];
 		}
 		
