@@ -29,7 +29,7 @@ public class Grid {
 	 * Constructs a Cage for the kenken grid based on the description
 	 * given in the String.<br>
 	 * The description is expected to be of the following form:
-	 * <operation> <total> <# of Squares> <space separated list of points><br>
+	 * <operation> <total> <# of Squares> <space separated list of points in row,col order><br>
 	 * <br>
 	 * <b>Operations:</b><br>
 	 * <b><i>Subtract<br>
@@ -541,11 +541,5 @@ public class Grid {
 			options.add(new int[]{total});
 			this.options = options;
 		}
-	}
-}
-
-class InvalidInitializationException extends Exception {
-	public InvalidInitializationException(String a) {
-		super(a);
 	}
 }

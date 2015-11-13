@@ -2,8 +2,10 @@ package gui;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javafx.application.Application;
@@ -27,6 +29,9 @@ import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import kenken.InvalidInitializationException;
+import kenken.RecursiveSolver;
+import kenken.Solver;
 
 public class KenKenApp extends Application {
 	
@@ -163,19 +168,32 @@ public class KenKenApp extends Application {
 
 			@Override
 			public void handle(MouseEvent event) {
-				
 				String operation = operationSelection.getValue();
 				
 				String totalString = totalInput.getText();
 				if(!totalString.matches("[0-9]+")) {
+					//TODO: Decide if an error message should appear
 					return;
 				}
 				int total = Integer.parseInt(totalString);
 				
 				Set<VisualSquare> selectedSquares = VisualSquare.selectedSquares;
-				System.out.println("Number of selected Squares: " + selectedSquares.size());
+				if(selectedSquares.size() == 0) {
+					//TODO: Decide if an error message should appear
+					return;
+				}
+				VisualSquare marker = null;
+				
 				
 				for(VisualSquare currentSquare : selectedSquares) {
+					if(marker == null || currentSquare.row < marker.row) {
+						marker = currentSquare;
+					} else if (currentSquare.row == marker.row) {
+						if(currentSquare.col < marker.col) {
+							marker = currentSquare;
+						}
+					}
+					
 					GraphicsContext gc = currentSquare.getGraphicsContext2D();
 					gc.setStroke(Color.BLACK);
 					gc.setLineWidth(Params.cageOutlineSize);
@@ -220,10 +238,15 @@ public class KenKenApp extends Application {
 					}
 				}
 				
+				GraphicsContext gc = marker.getGraphicsContext2D();
+				gc.setLineWidth(1.0);
+				gc.strokeText(total + " " + Params.operations.get(operation), 5, 15);
+				
+				
 				VisualCage createdCage = new VisualCage(operation, total);
 				createdCage.addSquares(selectedSquares);
 				
-				selectedSquares.removeAll(selectedSquares);
+				VisualSquare.clearSelected();
 			}
 		});
 		
@@ -234,6 +257,37 @@ public class KenKenApp extends Application {
 		 */
 		
 		Button solveKenKenButton = new Button("Solve");
+		solveKenKenButton.setOnMouseClicked(new EventHandler<MouseEvent>(){
+
+			@Override
+			public void handle(MouseEvent event) {
+				String description = Params.kenkenDimension + "\n" + VisualCage.allCages.size() + "\n";
+				for(VisualCage i : VisualCage.allCages) {
+					description += i.toString() + "\n";
+				}
+				
+				Solver s = null;
+				try {
+					s = new RecursiveSolver(description);
+				} catch (InvalidInitializationException ex) {
+					System.err.println("Something went wrong");
+					ex.printStackTrace();
+				}
+				
+				s.solve();
+				if(s.isSolved()) {
+					int[][] k = s.getKenKen();
+					
+					for(int[] x : k) {
+						for(int y : x) {
+							System.out.print(y + " ");
+						}
+						System.out.println();
+					}
+				}
+			}
+			
+		});
 		
 		container.getChildren().add(solveKenKenButton);
 		
@@ -246,6 +300,8 @@ public class KenKenApp extends Application {
 		int total;
 		
 		public VisualCage(String op, int t) {
+			operation = op;
+			total = t;
 			containedSquares = new ArrayList<VisualSquare>();
 			allCages.add(this);
 		}
@@ -264,7 +320,7 @@ public class KenKenApp extends Application {
 			String rep = operation;
 			rep += " " + total + " " + containedSquares.size();
 			for(VisualSquare s : containedSquares) {
-				rep += " (" + s.col + "," + s.row + ")";
+				rep += " " + s.row + "," + s.col;
 			}
 			
 			return rep;
@@ -283,10 +339,6 @@ public class KenKenApp extends Application {
 		boolean selected;
 		boolean locked;
 		//You're my boolean and I have you locked ;)
-		
-		public VisualSquare() {
-			genericConstruction();
-		}
 		
 		public VisualSquare(int width, int height) {
 			super(width, height);
@@ -343,6 +395,15 @@ public class KenKenApp extends Application {
 		public static double sceneHeight = 400.0;
 
 		public static int kenkenDimension = 5;
+		public static Map<String, String> operations;
+		static {
+			operations = new HashMap<String, String>();
+			operations.put("Add", "+");
+			operations.put("Subtract", "-");
+			operations.put("Multiply", "x");
+			operations.put("Divide", "\u00F7");
+			operations.put("Equal", "");
+		}
 		
 		public static double kenkenGridSize = 250.0;
 		public static int squareSize = (int) kenkenGridSize/kenkenDimension;
