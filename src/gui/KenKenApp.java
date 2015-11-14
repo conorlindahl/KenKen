@@ -270,19 +270,23 @@ public class KenKenApp extends Application {
 				try {
 					s = new RecursiveSolver(description);
 				} catch (InvalidInitializationException ex) {
-					System.err.println("Something went wrong");
-					ex.printStackTrace();
+					System.err.println("KenKen Solver failed to initialize, check that everythign is set up");
+					return;
 				}
 				
 				s.solve();
 				if(s.isSolved()) {
-					int[][] k = s.getKenKen();
+					int[][] solvedValues = s.getKenKen();
 					
-					for(int[] x : k) {
-						for(int y : x) {
-							System.out.print(y + " ");
+					for(VisualCage vc : VisualCage.allCages) {
+						for(VisualSquare vs : vc.containedSquares) {
+							int squareValue = solvedValues[vs.row][vs.col];
+							
+							GraphicsContext gc = vs.getGraphicsContext2D();
+							gc.setFont(new Font(24));
+							gc.setLineWidth(3.0);
+							gc.strokeText("" + squareValue, Params.cageOutlineSize, Params.squareSize - Params.cageOutlineSize);
 						}
-						System.out.println();
 					}
 				}
 			}
@@ -372,6 +376,7 @@ public class KenKenApp extends Application {
 			
 			return (vs.row == sameRow) && (vs.col == leftCol);
 		}
+		
 		private void genericConstruction() {
 			row = 0;
 			col = 0;
