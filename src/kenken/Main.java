@@ -10,9 +10,12 @@ public class Main {
 	public static void main(String[] args)  {
 		Input i;
 		Scanner sc = new Scanner(System.in);
-		System.out.print("Enter a file name: ");
-		String fileName = sc.nextLine();
-		i = new InputFromFile(fileName);
+		do {
+			System.out.print("Enter a file name: ");
+			String fileName = sc.nextLine();
+			i = new InputFromFile(fileName);
+		} while (!i.isReady());
+		sc.close();
 		
 		Solver s = null;
 		try {

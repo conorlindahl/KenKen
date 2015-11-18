@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class InputFromFile implements Input {
 
 	private String fileName;
-	private Scanner reader = null;
+	private Scanner reader;
 	
 	public InputFromFile(String fn) {
 		fileName = fn;
@@ -15,9 +15,14 @@ public class InputFromFile implements Input {
 		try {
 			reader = new Scanner(new File(fileName));
 		} catch (FileNotFoundException ex) {
-			System.err.println("The file " + fileName + " was not found.");
-			System.err.println("InputFromFile not initialized");
+			System.out.println("File " + fileName + " not found.");
+			reader = null;
 		}
+	}
+	
+	@Override
+	public boolean isReady() {
+		return reader != null;
 	}
 	
 	@Override
