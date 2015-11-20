@@ -30,4 +30,6 @@ public class Params {
 	public static final double unselectedStrokeSize = 2.0;
 	public static final double cageOutlineSize = 6.0;
 	public static final double inCageLineSize = 2.0;
+	
+	public static final String solverType = "RecursiveSolver";
 }

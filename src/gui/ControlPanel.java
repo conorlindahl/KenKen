@@ -1,5 +1,7 @@
 package gui;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Set;
 
@@ -17,8 +19,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Font;
-import kenken.InvalidInitializationException;
-import kenken.RecursiveSolver;
 import kenken.Solver;
 
 public class ControlPanel extends VBox {
@@ -212,9 +212,14 @@ public class ControlPanel extends VBox {
 				
 				Solver s = null;
 				try {
-					s = new RecursiveSolver(description);
-				} catch (InvalidInitializationException ex) {
-					System.err.println("KenKen Solver failed to initialize, check that everythign is set up");
+					Class<?> solverClass = Class.forName("kenken." + Params.solverType);
+					Constructor<?> solverConstructor = solverClass.getConstructor(String.class);
+					s = (Solver) solverConstructor.newInstance(description);
+				} catch (InvocationTargetException e) {
+					System.err.println("KenKen Solver failed to initialize, check that everything is set up");
+					return;
+				} catch (Exception ex) {
+					System.err.println("Something is wrong with your settings");
 					return;
 				}
 				
@@ -232,6 +237,8 @@ public class ControlPanel extends VBox {
 							gc.strokeText("" + squareValue, Params.cageOutlineSize, Params.squareSize - Params.cageOutlineSize);
 						}
 					}
+				} else {
+					System.err.println("Unable to sovle KenKen");
 				}
 			}
 		}
