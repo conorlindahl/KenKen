@@ -4,10 +4,8 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -57,10 +55,6 @@ public class KenKenApp extends Application {
 			for(int row=0; row<Params.kenkenDimension; row+=1) {
 				VisualSquare v =  
 						new VisualSquare(row, col, Params.squareSize, Params.squareSize);
-				GraphicsContext gc = v.getGraphicsContext2D();
-				gc.setStroke(Color.DARKGREY);
-				gc.setLineWidth(Params.unselectedStrokeSize);
-				gc.strokeRect(0, 0, Params.squareSize, Params.squareSize);
 				grid.add(v, col, row);
 			}
 		}

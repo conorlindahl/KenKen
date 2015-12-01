@@ -24,7 +24,7 @@ public class Params {
 	public static final Color backgroundColor = Color.WHITE;
 	public static int squareSize = (int) kenkenGridSize/kenkenDimension;
 
-	public static final Color selectedSquareColor = Color.BLACK;  
+	public static final Color selectedSquareColor = Color.BLACK; 
 	public static final double selectedStrokeSize = 3.0;
 	public static final Color unselectedSquareColor = Color.DARKGRAY;
 	public static final double unselectedStrokeSize = 2.0;

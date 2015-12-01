@@ -22,6 +22,7 @@ public class VisualSquare extends Canvas {
 		selected = false;
 		locked = false;
 		setOnMouseClicked(new VisualSquareEvent());
+		unselect();
 	}
 	
 	public boolean isAdjacentAbove(VisualSquare vs) {
