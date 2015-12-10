@@ -55,23 +55,25 @@ public class VisualSquare extends Canvas {
 	
 	private void select() {
 		GraphicsContext gc = getGraphicsContext2D();
+		int squareSize = (int) Params.kenkenGridSize/Params.kenkenDimension;
 		gc.setStroke(Params.selectedSquareColor);
 		gc.setLineWidth(Params.selectedStrokeSize);
 		gc.strokeRect(0, 0, 
-				Params.squareSize, Params.squareSize);
+				squareSize, squareSize);
 		VisualSquare.selectedSquares.add(this);
 	}
 	
 	private void unselect() {
 		GraphicsContext gc = getGraphicsContext2D();
+		int squareSize = (int) Params.kenkenGridSize/Params.kenkenDimension;
 		gc.setStroke(Params.backgroundColor);
 		gc.setLineWidth(Params.selectedStrokeSize+1);
 		gc.strokeRect(0, 0, 
-				Params.squareSize, Params.squareSize);
+				squareSize, squareSize);
 		gc.setStroke(Params.unselectedSquareColor);
 		gc.setLineWidth(Params.unselectedStrokeSize);
 		gc.strokeRect(0, 0, 
-				Params.squareSize, Params.squareSize);
+				squareSize, squareSize);
 		VisualSquare.selectedSquares.remove(this);
 	}
 	

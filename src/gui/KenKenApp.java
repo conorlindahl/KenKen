@@ -1,17 +1,18 @@
 package gui;
 
 import javafx.application.Application;
-import javafx.geometry.Insets;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.text.Font;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class KenKenApp extends Application {
-	
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -21,45 +22,37 @@ public class KenKenApp extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		primaryStage.setTitle("KenKen Solver");
 		
-		Text title = new Text("KenKen Solver");
-		title.setFont(Font.font("Times New Roman", 32));
+		VBox menu = new VBox();
+		Scene t = new Scene(menu, Params.sceneWidth, Params.sceneHeight);
 		
-		GridPane grid = setUpKenKenVisual();
+		menu.setAlignment(Pos.CENTER);
+		menu.getChildren().addAll(new Text("Welcome to the kenken Solver!"));
 		
-		ControlPanel controlPanel = new ControlPanel();
+		HBox sizeSelect = new HBox();
+		sizeSelect.getChildren().add(new Text("Choose your KenKen size: "));
+		ChoiceBox<Integer> sizes = new ChoiceBox<Integer>();
+		sizes.getItems().addAll(new Integer(5), new Integer(6), new Integer(7), new Integer(8), new Integer(9));
+		sizeSelect.setAlignment(Pos.CENTER);
+		sizeSelect.getChildren().add(sizes);
+		menu.getChildren().add(sizeSelect);
 		
-		BorderPane layout = new BorderPane();
-		layout.setTop(title);
-		BorderPane.setAlignment(title, Pos.BOTTOM_CENTER);
-		BorderPane.setMargin(title, new Insets(20, 0, 0, 0));
-		layout.setLeft(grid);
-		layout.setRight(controlPanel);
-		BorderPane.setAlignment(controlPanel, Pos.BOTTOM_LEFT);
-		BorderPane.setMargin(controlPanel, new Insets(50, 100, 0, 0));
-
-		double sceneWidth = Params.sceneWidth;
-		double sceneHeight = Params.sceneHeight;
-		Scene r = new Scene(layout, sceneWidth, sceneHeight);
+		GameScene game = new GameScene(primaryStage, t);
+		Button start = new Button("Solve");
+		start.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				int size = sizes.getValue().intValue();
+				Params.kenkenDimension = size;
+				game.resize();
+				primaryStage.setScene(game);
+			}
+		});
+		menu.getChildren().add(start);
+		
 		
 		primaryStage.setResizable(false);
-		primaryStage.setScene(r);
+		primaryStage.setScene(t);
 		primaryStage.show();
-	}
-	
-	private GridPane setUpKenKenVisual() {
-		GridPane grid = new GridPane();
-		grid.setAlignment(Pos.BASELINE_LEFT);
-		grid.setPadding(new Insets(50));
 		
-		for(int col=0; col<Params.kenkenDimension; col+=1) {
-			for(int row=0; row<Params.kenkenDimension; row+=1) {
-				VisualSquare v =  
-						new VisualSquare(row, col, Params.squareSize, Params.squareSize);
-				grid.add(v, col, row);
-			}
-		}
-		
-		return grid;
 	}
-
 }

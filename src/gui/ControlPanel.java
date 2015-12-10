@@ -138,13 +138,14 @@ public class ControlPanel extends VBox {
 					}
 					
 					GraphicsContext gc = currentSquare.getGraphicsContext2D();
+					int squareSize = (int) Params.kenkenGridSize/Params.kenkenDimension;
 					gc.setStroke(Color.BLACK);
 					gc.setLineWidth(Params.cageOutlineSize);
 					gc.setLineCap(StrokeLineCap.BUTT);
-					gc.strokeRect(0, 0, Params.squareSize, Params.squareSize);
+					gc.strokeRect(0, 0, squareSize, squareSize);
 					
 					double frontAdjust = Params.cageOutlineSize/2;
-					double backAdjust = Params.squareSize-Params.cageOutlineSize/2;
+					double backAdjust = squareSize-Params.cageOutlineSize/2;
 					
 					for(VisualSquare compareSquare : selectedSquares) {
 						compareSquare.locked = true;
@@ -158,18 +159,18 @@ public class ControlPanel extends VBox {
 						} else if(currentSquare.isAdjacentRight(compareSquare)) {
 							gc.setStroke(Color.WHITE);
 							gc.setLineWidth(Params.cageOutlineSize+1);
-							gc.strokeLine(Params.squareSize, frontAdjust, Params.squareSize, backAdjust);
+							gc.strokeLine(squareSize, frontAdjust, squareSize, backAdjust);
 							gc.setStroke(Color.BLACK);
 							gc.setLineWidth(Params.inCageLineSize);
-							gc.strokeLine(Params.squareSize, frontAdjust, Params.squareSize, backAdjust);
+							gc.strokeLine(squareSize, frontAdjust, squareSize, backAdjust);
 							
 						} else if(currentSquare.isAdjacentBelow(compareSquare)) {
 							gc.setStroke(Color.WHITE);
 							gc.setLineWidth(Params.cageOutlineSize+1);
-							gc.strokeLine(frontAdjust, Params.squareSize, backAdjust, Params.squareSize);
+							gc.strokeLine(frontAdjust, squareSize, backAdjust, squareSize);
 							gc.setStroke(Color.BLACK);
 							gc.setLineWidth(Params.inCageLineSize);
-							gc.strokeLine(frontAdjust, Params.squareSize, backAdjust, Params.squareSize);
+							gc.strokeLine(frontAdjust, squareSize, backAdjust, squareSize);
 						} else if(currentSquare.isAdjacentLeft(compareSquare)) {
 							gc.setStroke(Color.WHITE);
 							gc.setLineWidth(Params.cageOutlineSize+1);
@@ -232,9 +233,10 @@ public class ControlPanel extends VBox {
 							int squareValue = solvedValues[vs.row][vs.col];
 							
 							GraphicsContext gc = vs.getGraphicsContext2D();
+							int squareSize = (int) Params.kenkenGridSize/Params.kenkenDimension;
 							gc.setFont(new Font(24));
 							gc.setLineWidth(3.0);
-							gc.strokeText("" + squareValue, Params.cageOutlineSize, Params.squareSize - Params.cageOutlineSize);
+							gc.strokeText("" + squareValue, Params.cageOutlineSize, squareSize - Params.cageOutlineSize);
 						}
 					}
 				} else {
